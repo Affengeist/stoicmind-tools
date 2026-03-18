@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stoischer Impuls der Woche</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --petrol-deep: #1E3A3A;
+    --brass: #B8944A;
+    --brass-light: #D4B06A;
+    --warm-light: #F7F1E8;
+    --text-mid: #5A5A54;
+    --text-light: #8A8A82;
+    --border: #D4CCBE;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--warm-light);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 740px;
+    padding: 60px clamp(24px, 5vw, 48px) 80px;
+    margin: 0 auto;
+  }
+
+  .week-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 24px;
+  }
+
+  .impulse-title {
+    font-family: 'Lora', serif;
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 500;
+    color: var(--petrol-deep);
+    line-height: 1.3;
+    margin-bottom: 32px;
+  }
+
+  .brass-line {
+    width: 60px;
+    height: 2px;
+    background: var(--brass);
+    margin-bottom: 32px;
+  }
+
+  .impulse-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--text-mid);
+    line-height: 1.9;
+    margin-bottom: 24px;
+  }
+
+  .impulse-closing {
+    font-family: 'Lora', serif;
+    font-size: 17px;
+    font-style: italic;
+    color: var(--petrol-deep);
+    line-height: 1.6;
+    margin-top: 40px;
+    border-left: 3px solid var(--brass);
+    padding-left: 20px;
+  }
+
+  .footer-note {
+    margin-top: 56px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text-light);
+    line-height: 1.7;
+  }
+
+  .footer-note a {
+    color: var(--brass);
+    text-decoration: none;
+    font-weight: 400;
+    transition: color 0.3s;
+  }
+
+  .footer-note a:hover {
+    color: var(--brass-light);
+  }
+
+  .week-nav {
+    margin-top: 16px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    color: var(--text-light);
+  }
+
+  .week-dots {
+    display: flex;
+    gap: 4px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .week-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+
+  .week-dot.past {
+    background: var(--petrol-deep);
+    opacity: 0.3;
+  }
+
+  .week-dot.current {
+    background: var(--brass);
+    box-shadow: 0 0 4px rgba(184, 148, 74, 0.5);
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 40px 20px 60px; }
+    .impulse-text { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="week-label" id="week-label"></div>
+  <h1 class="impulse-title" id="impulse-title"></h1>
+  <div class="brass-line"></div>
+  <div id="impulse-body"></div>
+
+  <div class="footer-note">
+    Jede Woche ein neuer Impuls. Kein Algorithmus, keine Benachrichtigung — einfach vorbeikommen.<br>
+    <a href="https://www.stoicmind.at" target="_top">← Zurück zur Startseite</a>
+  </div>
+
+  <div class="week-nav">
+    <span id="week-progress"></span>
+    <div class="week-dots" id="week-dots"></div>
+  </div>
+</div>
+
+<script>
+  /*
+  ============================================================
+  IMPULSE — Hier deine 52 Texte eintragen.
+
+  Format pro Impuls:
+  {
+    title: "Überschrift des Impulses",
+    body: "Der Haupttext. Drei bis vier Sätze. Ein Gedanke.",
+    closing: "Ein Schlusssatz oder -frage in Kursiv."
+  }
+
+  Die Impulse rotieren automatisch basierend auf der
+  Kalenderwoche. KW 1 = Impuls 0, KW 2 = Impuls 1 usw.
+  Nach 52 Wochen beginnt der Zyklus von vorn.
+
+  Ersetze die Beispiele durch deine eigenen Texte.
+  ============================================================
+  */
+
+  var impulse = [
+    {
+      title: "Du bist nicht zuständig für das Wetter.",
+      body: "Es gibt Dinge, die du beeinflussen kannst, und Dinge, die du nicht beeinflussen kannst. Die Kunst besteht nicht darin, beide Listen auswendig zu kennen — sondern darin, im konkreten Moment zu unterscheiden, mit welcher du es gerade zu tun hast. Die meiste Energie geht nicht an echte Probleme verloren, sondern an den Versuch, Dinge zu kontrollieren, die nie in deiner Hand lagen.",
+      closing: "Was auf deiner Liste steht heute unter der falschen Spalte?"
+    },
+    {
+      title: "Die Lücke zwischen Reiz und Reaktion.",
+      body: "Jemand sagt etwas, und du reagierst. Zwischen dem Satz und deiner Antwort liegt ein Raum — manchmal so schmal, dass du ihn nicht bemerkst. Aber er ist da. Die Stoiker trainierten genau diesen Raum: nicht um Gefühle zu unterdrücken, sondern um zu entscheiden, ob die Reaktion, die gerade hochkommt, wirklich die ist, die du geben willst.",
+      closing: "Wie oft reagierst du heute, bevor du entschieden hast?"
+    },
+    {
+      title: "Dankbarkeit ohne Kitsch.",
+      body: "Vergiss die Listen. Vergiss das Tagebuch. Die Stoiker hatten eine wirksamere Übung: Stell dir vor, du hättest verloren, was du hast. Nicht als Angstübung, sondern als Wahrnehmungsübung. Wer einmal wirklich gespürt hat, wie es wäre, die eigene Gesundheit, die Wohnung, einen Menschen zu verlieren, braucht keine Dankbarkeitsliste mehr. Die Dankbarkeit kommt von selbst — und sie ist ehrlich.",
+      closing: "Was würdest du am meisten vermissen, wenn es morgen nicht mehr da wäre?"
+    },
+    {
+      title: "Du musst nicht alles sofort klären.",
+      body: "Manche Spannungen lösen sich auf, wenn man sie in Ruhe lässt. Nicht alle — aber erstaunlich viele. Der Impuls, sofort zu reagieren, sofort zu klären, sofort eine Antwort zu haben, ist selten ein Zeichen von Reife. Meistens ist es Unbehagen, das nach Entladung sucht. Ein Stoiker hätte gesagt: Warte einen Tag. Wenn es morgen noch wichtig ist, handle dann.",
+      closing: "Welches Gespräch könntest du heute nicht führen — und damit genau richtig liegen?"
+    },
+    {
+      title: "Das Nein, das sich falsch anfühlt.",
+      body: "Du hast Nein gesagt. Freundlich, klar, angemessen. Und jetzt ist da dieses Ziehen. Das Gefühl, etwas Falsches getan zu haben. Dieser Impuls ist kein moralisches Signal — er ist ein Reflex. Ein System, das gelernt hat, soziale Spannung wie eine Bedrohung zu behandeln. Das Nein war richtig. Was jetzt kommt, ist der Preis der Klarheit. Und der wird mit der Zeit leiser.",
+      closing: "Welches Nein trägst du gerade mit schlechtem Gewissen — obwohl es stimmig war?"
+    },
+    {
+      title: "Hindernisse sind das Material.",
+      body: "Marc Aurel schrieb, dass das Hindernis auf dem Weg zum Weg wird. Das klingt wie ein Poster. Aber gemeint ist etwas Konkretes: Die Schwierigkeit, vor der du stehst, ist nicht das, was zwischen dir und deinem Leben steht. Sie ist dein Leben. Wer darauf wartet, dass die Hindernisse verschwinden, wartet darauf, dass das Leben aufhört.",
+      closing: "Was wäre, wenn das, was dich gerade aufhält, genau die Aufgabe ist?"
+    },
+    {
+      title: "Die vier Fragen am Abend.",
+      body: "Die Stoiker empfahlen eine Abendübung: Was habe ich heute gut gemacht? Wo bin ich meinen Grundsätzen untreu geworden? Was hätte ich besser machen können? Und was habe ich gelernt? Nicht als Selbstgericht, sondern als nüchterne Bestandsaufnahme. Wer sich jeden Abend fünf Minuten ehrlich Rechenschaft gibt, braucht keinen Coach. Und wer es trotzdem tut, kommt schneller voran.",
+      closing: "Wie würde sich dein Abend verändern, wenn du diese vier Fragen ehrlich beantwortest?"
+    },
+    {
+      title: "Weniger Meinung, mehr Beobachtung.",
+      body: "Bevor du etwas bewertest, nimm es wahr. Das klingt trivial, ist es aber nicht. Die meisten Urteile stehen fest, bevor die Beobachtung abgeschlossen ist. Ein Stoiker übt sich darin, den Moment zwischen Wahrnehmung und Bewertung zu dehnen. Nicht um urteilsfrei zu werden — das wäre unmenschlich — sondern um sicherzustellen, dass das Urteil auf Beobachtung beruht und nicht auf Gewohnheit.",
+      closing: "Wo hast du heute geurteilt, bevor du hingeschaut hast?"
+    },
+    {
+      title: "Du bist nicht deine Stimmung.",
+      body: "Eine Stimmung ist ein Wetter, kein Klima. Sie zieht auf, sie ist da, sie zieht weiter. Der Fehler ist nicht, schlechte Stimmung zu haben. Der Fehler ist, Entscheidungen zu treffen, als wäre die Stimmung die Wahrheit. Die Stoiker unterschieden streng zwischen dem, was geschieht, und der Geschichte, die wir darüber erzählen. Die Stimmung gehört zur Geschichte.",
+      closing: "Welche Entscheidung hast du zuletzt aus einer Stimmung heraus getroffen — statt aus Überlegung?"
+    },
+    {
+      title: "Der Wert des Unbequemen.",
+      body: "Bequemlichkeit ist kein Grundrecht. Sie ist ein Zustand, und wie alle Zustände macht sie weich, wenn sie zur Gewohnheit wird. Die Stoiker suchten gezielt das Unbequeme — nicht aus Masochismus, sondern als Training. Wer gelegentlich friert, hungert, verzichtet, erinnert sich daran, wie wenig er tatsächlich braucht. Und wer wenig braucht, ist schwer zu erschüttern.",
+      closing: "Wann hast du dich zuletzt freiwillig einer Unannehmlichkeit ausgesetzt?"
+    },
+    {
+      title: "Freundlichkeit ist kein Vertrag.",
+      body: "Du warst freundlich. Und jetzt erwartest du, dass der andere das erwidert. Das ist verständlich — aber es ist ein Geschäft, keine Tugend. Echte Freundlichkeit stellt keine Rechnung. Sie ist eine Entscheidung darüber, wer du sein willst, unabhängig davon, was zurückkommt. Der Moment, in dem du freundlich bist, obwohl nichts dafür spricht, ist der Moment, in dem es zählt.",
+      closing: "Wo erwartest du Gegenleistung für etwas, das du angeblich freiwillig gibst?"
+    },
+    {
+      title: "Veränderung beginnt nicht mit Motivation.",
+      body: "Der Satz „Ich müsste eigentlich" ist der ehrlichste Satz der Welt. Er sagt: Ich weiß, was richtig wäre, aber ich warte auf ein Gefühl, das mich dorthin trägt. Dieses Gefühl kommt nicht. Veränderung beginnt mit einer Handlung, die sich zunächst falsch anfühlt — weil sie neu ist. Das Gefühl der Stimmigkeit stellt sich ein, nachdem du angefangen hast. Nie davor.",
+      closing: "Was müsstest du eigentlich — und worauf wartest du dabei?"
+    },
+    {
+      title: "Der Vergleich, der leise frisst.",
+      body: "Du siehst, was andere haben, und misst dein Inneres an deren Außen. Das ist kein Charakterfehler — es ist eine Wahrnehmungsverzerrung, die jeder Mensch kennt. Die Stoiker empfahlen dagegen eine einfache Übung: Richte die Aufmerksamkeit auf das, was du hast, und frage dich ehrlich, ob du es vor zehn Jahren nicht für unmöglich gehalten hättest. Meistens lautet die Antwort ja.",
+      closing: "Was besitzt du heute, wovon du vor zehn Jahren nicht zu träumen gewagt hättest?"
+    },
+    {
+      title: "Die Kunst, sich nicht einzumischen.",
+      body: "Jemand in deinem Umfeld trifft eine Entscheidung, die du für falsch hältst. Der Impuls, etwas zu sagen, fühlt sich an wie Fürsorge. Meistens ist er Kontrolle in einem freundlicheren Kleid. Erwachsene Menschen dürfen Fehler machen — auch solche, die du kommen siehst. Deine Aufgabe ist, da zu sein, wenn sie dich brauchen. Nicht vorher.",
+      closing: "Wo verwechselst du gerade Fürsorge mit dem Bedürfnis, recht zu behalten?"
+    },
+    {
+      title: "Geduld ist keine passive Eigenschaft.",
+      body: "Geduldig zu sein heißt nicht, nichts zu tun und abzuwarten. Es heißt, den Unterschied zu erkennen zwischen Dingen, die Zeit brauchen, und Dingen, die Handlung brauchen. Wer bei beidem gleich reagiert — entweder immer drängend oder immer abwartend — verwechselt Temperament mit Weisheit. Die eigentliche Übung liegt darin, in jedem einzelnen Fall neu zu entscheiden.",
+      closing: "Wo verwechselst du Geduld mit Aufschieben?"
+    },
+    {
+      title: "Das Gespräch, das du vermeidest.",
+      body: "Es gibt ein Gespräch, das du seit Wochen vor dir herschiebst. Du kennst es. Du weißt, mit wem. Und du weißt, warum du es vermeidest: nicht weil du den Ausgang fürchtest, sondern weil du die Spannung fürchtest, die dorthin führt. Diese Spannung ist der Preis der Klarheit. Und sie ist fast immer kürzer und erträglicher, als die Wochen der Vermeidung, die ihr vorausgehen.",
+      closing: "Welches Gespräch schiebst du gerade vor dir her — und was kostet dich das Aufschieben?"
+    },
+    {
+      title: "Du musst nicht verstanden werden.",
+      body: "Der Wunsch, verstanden zu werden, ist zutiefst menschlich. Aber er kann zur Falle werden, wenn du anfängst, dich zu erklären, wo keine Erklärung verlangt wurde. Manche Entscheidungen brauchst du niemandem zu begründen. Manche Gefühle musst du niemandem beweisen. Es reicht, wenn du selbst weißt, warum du tust, was du tust. Das ist keine Arroganz. Das ist Selbstführung.",
+      closing: "Wo erklärst du dich gerade jemandem, der gar nicht gefragt hat?"
+    },
+    {
+      title: "Älter werden ist kein Verlust.",
+      body: "Die Kultur erzählt dir, dass du mit jedem Jahr etwas verlierst. Frische. Möglichkeiten. Relevanz. Was sie verschweigt: Mit jedem Jahr gewinnst du etwas, das sich nicht kaufen lässt — die Fähigkeit, Wesentliches von Unwesentlichem zu unterscheiden. Wer mit fünfzig nicht klarer sieht als mit dreißig, hat nicht hingeschaut. Wer klarer sieht, hat allen Grund, das als Gewinn zu betrachten.",
+      closing: "Was kannst du heute, das du mit dreißig nicht konntest — und wann hast du dich zuletzt dafür gewürdigt?"
+    },
+    {
+      title: "Das Richtige fühlt sich nicht immer richtig an.",
+      body: "Du triffst eine Entscheidung, die deinen Werten entspricht. Und trotzdem fühlt sie sich unangenehm an. Das ist normal. Unbehagen ist kein Beweis dafür, dass du falsch liegst. Es ist oft ein Beweis dafür, dass du etwas Neues tust. Dein Nervensystem kann nicht zwischen „gefährlich" und „ungewohnt" unterscheiden. Dein Verstand schon.",
+      closing: "Welche richtige Entscheidung hast du zuletzt angezweifelt, nur weil sie sich unbequem angefühlt hat?"
+    },
+    {
+      title: "Die Stille nach dem Funktionieren.",
+      body: "Du hast funktioniert. Jahrelang. Zuverlässig. Für andere. Und irgendwann, in einem ruhigen Moment, merkst du, dass du nicht weißt, was du eigentlich willst — jenseits dessen, was von dir erwartet wird. Diese Stille ist kein Defizit. Sie ist der Anfang einer ehrlichen Frage. Und ehrliche Fragen brauchen keinen sofortigen Antwort. Sie brauchen Raum.",
+      closing: "Was würdest du tun, wenn niemand etwas von dir erwarten würde?"
+    },
+    {
+      title: "Grenzen setzen heißt nicht hart sein.",
+      body: "Ein Zaun um einen Garten ist keine Feindseligkeit gegenüber den Nachbarn. Er ist eine Aussage darüber, wo der Garten aufhört. Grenzen funktionieren genauso. Sie definieren nicht, was du gegen andere hast. Sie definieren, wo du anfängst. Wer das als Ablehnung liest, verwechselt Nähe mit Zugang. Du darfst beides trennen, ohne dich dafür zu entschuldigen.",
+      closing: "Wo hast du zuletzt eine Grenze verwässert, weil du Ablehnung befürchtet hast?"
+    },
+    {
+      title: "Nicht jede Traurigkeit braucht eine Lösung.",
+      body: "Manchmal bist du traurig, und es gibt keinen Grund dafür. Keinen Anlass, kein Ereignis, nichts, das sich reparieren ließe. Die Gewohnheit, jedes Gefühl sofort in ein Problem zu verwandeln, das gelöst werden muss, ist selbst das Problem. Manche Stimmungen wollen nichts von dir. Sie wollen nur da sein dürfen, eine Weile, und dann gehen sie von selbst.",
+      closing: "Wann hast du dir zuletzt erlaubt, traurig zu sein, ohne sofort nach dem Warum zu suchen?"
+    },
+    {
+      title: "Das Urteil über andere sagt mehr über dich.",
+      body: "Was dich an anderen stört, ist selten deren Problem. Es ist meistens ein Spiegel — für etwas, das du an dir selbst nicht sehen willst, oder für eine Grenze, die du nicht setzen kannst. Die nächste Person, die dich irritiert, ist eine Gelegenheit. Nicht zur Korrektur des anderen, sondern zur Beobachtung deiner eigenen Reaktion.",
+      closing: "Wer hat dich diese Woche irritiert — und was sagt das über dich?"
+    },
+    {
+      title: "Allein sein können ist eine Kompetenz.",
+      body: "Wer es nicht aushält, mit sich allein zu sein, wird in jeder Beziehung zu viel verlangen. Denn wer das Alleinsein nicht kennt, verwechselt Nähe mit Bedürftigkeit. Die Fähigkeit, einen Abend mit sich selbst zu verbringen, ohne zum Telefon zu greifen, ohne den Fernseher einzuschalten, ohne irgendetwas zu konsumieren — das ist keine Einsamkeit. Das ist der angemessene Aggregatzustand eines Menschen, der bei sich angekommen ist.",
+      closing: "Wann warst du zuletzt freiwillig allein — und wie hat sich das angefühlt?"
+    },
+    {
+      title: "Hilfsbereitschaft hat eine Grenze.",
+      body: "Du hilfst gern. Das ist ehrenwert. Aber wenn du jedes Mal hilfst, wenn jemand fragt, trainierst du zwei Dinge gleichzeitig: bei dir selbst die Gewohnheit, gebraucht zu werden, und bei anderen die Erwartung, dass du immer verfügbar bist. Beides führt in dieselbe Richtung — weg von dir. Hilfsbereitschaft, die sich selbst vergisst, ist keine Tugend. Sie ist eine Vermeidungsstrategie.",
+      closing: "Wem hilfst du regelmäßig — und wessen Problem löst du damit eigentlich?"
+    },
+    {
+      title: "Das Lob, das du suchst.",
+      body: "Du hast etwas geleistet, und niemand hat es bemerkt. Das nagt. Nicht weil die Leistung weniger wert wäre, sondern weil ein Teil von dir die Bestätigung braucht, um sich sicher zu fühlen. Dieser Teil ist menschlich. Aber er ist kein guter Ratgeber. Wer seine Energie darauf verwendet, gesehen zu werden, hat weniger Energie für das, was er tun will. Die Arbeit ist das Ziel. Nicht der Applaus.",
+      closing: "Was hast du zuletzt gut gemacht — ohne dass es jemand bemerkt hat? Und reicht dir das?"
+    },
+    {
+      title: "Verzeihen ist keine Schwäche.",
+      body: "Verzeihen heißt nicht, dass das Geschehene in Ordnung war. Es heißt, dass du aufhörst, die Last davon zu tragen. Der andere hat sein Leben, seine Gründe, seine Geschichte. Du hast deins. Solange du Groll trägst, lebst du in seinem Fehler statt in deiner Gegenwart. Verzeihen ist der pragmatischste Akt, zu dem ein Mensch fähig ist. Er befreit genau eine Person: dich.",
+      closing: "Welchen Groll trägst du mit dir, der mehr über deine Gegenwart aussagt als über die Vergangenheit?"
+    },
+    {
+      title: "Die Angst vor dem leeren Raum.",
+      body: "Du hast Platz geschaffen. Eine Beziehung beendet, einen Job verlassen, eine Gewohnheit abgelegt. Und jetzt ist da Leere. Der Reflex, sie sofort zu füllen, ist stark. Aber Leere ist kein Mangel. Sie ist ein Raum, der darauf wartet, dass du ihn bewusst gestaltest. Wer zu schnell füllt, bekommt meistens eine Wiederholung dessen, was er gerade losgelassen hat.",
+      closing: "Welchen leeren Raum in deinem Leben versuchst du gerade zu schnell zu füllen?"
+    },
+    {
+      title: "Dein Körper lügt nicht.",
+      body: "Du sagst, es geht dir gut. Dein Rücken sagt etwas anderes. Dein Kiefer ist angespannt, dein Atem flach, deine Schultern auf Ohrhöhe. Der Körper hat kein Interesse an Höflichkeit. Er zeigt, was ist. Wer lernt, ihm zuzuhören, braucht weniger Krisenmomente, um zu merken, dass etwas nicht stimmt. Die Informationen waren die ganze Zeit da. Sie wurden nur überhört.",
+      closing: "Was erzählt dir dein Körper gerade, das du lieber nicht hören möchtest?"
+    },
+    {
+      title: "Es muss nicht perfekt sein.",
+      body: "Perfektionismus tarnt sich als hoher Anspruch. In Wahrheit ist er meistens Angst — die Angst, bewertet zu werden, bevor man bereit ist. Aber bereit ist man nie. Wer auf Perfektion wartet, liefert nichts. Wer etwas Unfertiges zeigt, lernt schneller als jeder, der im Stillen poliert. Die Stoiker schätzten Fortschritt, nicht Makellosigkeit. Ein Prokopton ist jemand, der voranschreitet. Nicht jemand, der angekommen ist.",
+      closing: "Was hältst du gerade zurück, weil es noch nicht perfekt genug ist?"
+    },
+    {
+      title: "Die Meinung, die du nicht haben musst.",
+      body: "Zu vielen Dingen eine Meinung zu haben, kostet mehr Energie, als die meisten ahnen. Nicht jedes Thema verlangt deine Positionierung. Nicht jeder Streit braucht deine Seite. Die Freiheit, zu sagen „Dazu habe ich keine Meinung" ist eine der am meisten unterschätzten Formen innerer Ruhe. Wer weniger meint, beobachtet mehr. Und wer mehr beobachtet, urteilt klüger, wenn es darauf ankommt.",
+      closing: "Zu welchem Thema könntest du diese Woche aufhören, eine Meinung zu haben?"
+    },
+    {
+      title: "Was du kontrollierst: deine Vorbereitung.",
+      body: "Das Ergebnis eines Gesprächs kontrollierst du nicht. Das Ergebnis einer Bewerbung nicht. Das Ergebnis einer Untersuchung nicht. Was du kontrollierst, ist die Vorbereitung: wie klar du denkst, wie ehrlich du kommunizierst, wie sorgfältig du handelst. Alles danach liegt außerhalb. Wer sich auf die Vorbereitung konzentriert und das Ergebnis loslässt, lebt nicht sorgloser, aber gelassener.",
+      closing: "Wo investierst du gerade Energie in ein Ergebnis, statt in deine Vorbereitung?"
+    },
+    {
+      title: "Für wen machst du das?",
+      body: "Die ehrlichste Frage, die du dir bei jeder Aufgabe stellen kannst: Für wen mache ich das gerade? Für mich? Für jemand anderen? Oder für ein Bild von mir, das ich aufrechterhalten will? Die Antwort muss nicht immer „für mich" lauten. Aber wenn sie dauerhaft „für andere" lautet und du dich dabei verlierst, stimmt die Bilanz nicht mehr.",
+      closing: "Welche wiederkehrende Aufgabe in deinem Leben machst du ausschließlich für andere — und wann hast du zuletzt gefragt, ob das noch stimmt?"
+    },
+    {
+      title: "Weniger erklären, mehr handeln.",
+      body: "Menschen, die ihr Leben verändern, reden selten viel darüber. Sie fangen einfach an. Der Drang, allen zu erzählen, was man vorhat, ist oft ein Ersatz für das Tun selbst — das Gehirn belohnt die Ankündigung fast so stark wie die Umsetzung. Deshalb scheitern so viele Vorhaben nach der Verkündung: Die Belohnung wurde bereits abgeholt, ohne dass etwas geschehen ist.",
+      closing: "Was hast du zuletzt angekündigt, statt es einfach zu tun?"
+    },
+    {
+      title: "Zufriedenheit ist kein Dauerzustand.",
+      body: "Wir behandeln Zufriedenheit wie etwas, das man einmal erreicht und dann behält. Wie einen Gegenstand im Regal. Aber Zufriedenheit ist ein Muskel, kein Besitz. Sie entsteht in Momenten der bewussten Wahrnehmung — und verschwindet, sobald die Aufmerksamkeit wandert. Die gute Nachricht: Du musst dein Leben nicht umbauen, um sie zu finden. Du musst hinschauen lernen.",
+      closing: "Wann warst du heute zufrieden — und hast du es bemerkt?"
+    },
+    {
+      title: "Der Mut, unpopulär zu sein.",
+      body: "Es gibt Situationen, in denen das Richtige das Unbeliebte ist. Eine Meinung vertreten, die niemand hören will. Eine Entscheidung treffen, die Unverständnis erntet. Einen Weg einschlagen, den dein Umfeld nicht nachvollziehen kann. Die Stoiker nannten Mut nicht die Abwesenheit von Angst, sondern die Bereitschaft, trotz Gegenwind zu handeln, wenn die eigenen Grundsätze es verlangen.",
+      closing: "Wo hältst du dich gerade zurück, weil du fürchtest, was andere denken könnten?"
+    },
+    {
+      title: "Loslassen heißt nicht aufgeben.",
+      body: "Manche Dinge laufen sich tot. Beziehungen, Projekte, Überzeugungen. Das zu erkennen und loszulassen ist keine Schwäche. Es ist die Fähigkeit, zu unterscheiden zwischen dem, wofür es sich zu kämpfen lohnt, und dem, was nur noch aus Gewohnheit fortgeführt wird. Festhalten, wo Loslassen angemessen wäre, ist keine Treue. Es ist Angst vor dem Neuen, verkleidet als Prinzipientreue.",
+      closing: "Woran hältst du gerade fest, obwohl du spürst, dass es sich überlebt hat?"
+    },
+    {
+      title: "Weniger Konsum, mehr Verdauung.",
+      body: "Du hörst Podcasts, liest Bücher, besuchst Seminare. Das Wissen türmt sich. Aber Wissen ohne Verdauung ist Ballast. Die Stoiker lasen wenig und dachten viel nach. Ein einziger Gedanke, den du wirklich durchdrungen hast, verändert mehr als hundert Seiten, die du überflogen hast. Die Frage ist nicht, was du als nächstes lesen solltest. Die Frage ist, was du mit dem anfängst, was du schon weißt.",
+      closing: "Welche Erkenntnis aus den letzten Wochen hast du noch nicht wirklich verdaut?"
+    },
+    {
+      title: "Dein Tempo ist das richtige.",
+      body: "Die Welt erzählt dir, du solltest schneller sein. Effizienter. Produktiver. Aber Tempo ist keine Tugend. Manche der wichtigsten Prozesse im Leben — Trauer, Reifung, Vertrauen — lassen sich nicht beschleunigen. Wer es trotzdem versucht, bekommt eine Oberfläche, die nach Fortschritt aussieht, aber keine Tiefe hat. Dein Tempo ist kein Makel. Es ist die Geschwindigkeit, in der Echtheit möglich ist.",
+      closing: "Wo setzt du dich gerade unter Druck, schneller zu sein, als die Sache es erlaubt?"
+    },
+    {
+      title: "Du schuldest niemandem eine Erklärung für dein Leben.",
+      body: "Warum du allein lebst. Warum du keine Kinder hast. Warum du den Job gewechselt hast. Warum du leiser geworden bist. Die Welt stellt Fragen, die wie Interesse aussehen und wie Beurteilung gemeint sind. Du darfst antworten. Du musst es nicht. Dein Leben ist kein Aufsatz, der von anderen benotet wird. Es ist dein Entwurf. Die einzige Instanz, der du Rechenschaft schuldest, bist du selbst.",
+      closing: "Wem erklärst du gerade dein Leben — und wer hat dich darum gebeten?"
+    },
+    {
+      title: "Das Gute im Gewöhnlichen.",
+      body: "Ein Morgen ohne Schmerzen. Ein Gespräch, das in Ruhe endet. Ein Fenster, das sich öffnen lässt. Die meisten guten Dinge im Leben sind so gewöhnlich, dass wir sie nicht bemerken. Die Aufmerksamkeit richtet sich auf das Außergewöhnliche — das Schöne und das Schreckliche — und überspringt das, was dazwischen liegt. Aber dazwischen liegt fast alles. Und fast alles davon ist gut genug.",
+      closing: "Was war heute gut — und so unauffällig, dass du es fast übersehen hättest?"
+    },
+    {
+      title: "Rückzug ist keine Flucht.",
+      body: "Du brauchst Zeit für dich. Allein. Ohne Programm, ohne Gesellschaft, ohne Erreichbarkeit. Das ist kein Luxus und kein Zeichen dafür, dass etwas nicht stimmt. Es ist eine Notwendigkeit. Wer nie allein ist, weiß irgendwann nicht mehr, wo der eigene Gedanke aufhört und der fremde anfängt. Rückzug ist kein Weglaufen. Es ist ein Zurückkehren — zu dir selbst.",
+      closing: "Wann hast du dir zuletzt bewusst Einsamkeit gegönnt?"
+    },
+    {
+      title: "Die zweite Reaktion zählt.",
+      body: "Die erste Reaktion ist ein Reflex. Sie passiert, bevor du entschieden hast. Ein Stich im Bauch, ein Gedanke, ein Impuls. Das ist Biologie, nicht Charakter. Dein Charakter zeigt sich in dem, was du mit dieser ersten Reaktion machst. Ob du ihr folgst oder innehältst. Ob du den Impuls zum Handeln werden lässt oder ihn beobachtest und dann entscheidest. Die zweite Reaktion — das bist du.",
+      closing: "Wann bist du diese Woche deiner ersten Reaktion gefolgt, obwohl die zweite klüger gewesen wäre?"
+    },
+    {
+      title: "Erwartungen sind stille Verträge.",
+      body: "Du erwartest, dass der andere weiß, was du brauchst. Dass er merkt, wenn es dir nicht gut geht. Dass er von selbst tut, was du dir wünschst. Und wenn er es nicht tut, bist du enttäuscht — nicht an ihm, sondern an einem Vertrag, den nur du unterschrieben hast. Erwartungen, die du nicht aussprichst, sind unsichtbare Fallen. Für beide Seiten.",
+      closing: "Welche unausgesprochene Erwartung trägst du gerade mit dir — und was würde passieren, wenn du sie aussprichst?"
+    },
+    {
+      title: "Das Leben schuldet dir nichts.",
+      body: "Es gibt keinen kosmischen Buchhaltungstisch, auf dem deine guten Taten gegen dein Unglück verrechnet werden. Gute Menschen erleben Schlimmes. Schlechte Menschen haben Glück. Das ist keine Ungerechtigkeit — es ist Zufall. Die Stoa lehrt, das zu akzeptieren, ohne zynisch zu werden. Nicht weil es gerecht wäre, sondern weil die Erwartung an Gerechtigkeit mehr Schaden anrichtet als die Ungerechtigkeit selbst.",
+      closing: "Wo wartest du darauf, dass das Leben dir etwas zurückgibt, das es dir nie versprochen hat?"
+    },
+    {
+      title: "Du darfst deine Meinung ändern.",
+      body: "Gestern hast du etwas geglaubt. Heute weißt du es besser. Und jetzt schämst du dich, weil Meinungsänderung als Schwäche gilt. Dabei ist sie das Gegenteil. Wer an einer Überzeugung festhält, obwohl neue Informationen dagegen sprechen, schützt nicht seine Integrität. Er schützt sein Ego. Wachstum heißt, bereit zu sein, das Gestern für überholt zu erklären, wenn das Heute es verlangt.",
+      closing: "Welche Überzeugung hältst du aufrecht, obwohl du innerlich schon weißt, dass sie nicht mehr stimmt?"
+    },
+    {
+      title: "Die Kraft des Weglassens.",
+      body: "Was du nicht tust, formt dein Leben genauso wie das, was du tust. Jedes Ja zu einer Sache ist ein Nein zu einer anderen. Die meisten Menschen unterschätzen, wie viel Klarheit entsteht, wenn man konsequent weglässt: Termine, die nichts bringen. Beziehungen, die nur aus Gewohnheit bestehen. Nachrichten, die nichts verändern. Was übrig bleibt, nachdem du aufgeräumt hast, ist erstaunlich oft genug.",
+      closing: "Was könntest du diese Woche weglassen — und was würde an seine Stelle treten?"
+    },
+    {
+      title: "Niemand denkt so viel über dich nach, wie du glaubst.",
+      body: "Der peinliche Moment. Der falsche Satz. Der Fehler in der Präsentation. Du denkst tagelang darüber nach. Die anderen haben es am selben Abend vergessen. Das ist keine Gleichgültigkeit — es ist die Realität, dass jeder Mensch mit seinem eigenen inneren Film beschäftigt ist. Diese Einsicht ist befreiend, wenn du sie wirklich zulässt. Sie nimmt dir die Bürde, ständig ein Publikum zu bedienen, das gar nicht zuschaut.",
+      closing: "Welchen vermeintlichen Fehler trägst du noch mit dir, den außer dir längst niemand mehr im Kopf hat?"
+    },
+    {
+      title: "Der Winter hat seinen Sinn.",
+      body: "In der Natur ist der Winter keine Strafe. Er ist die Phase, in der sich unter der Oberfläche sammelt, was im Frühling wachsen wird. Lebensphasen funktionieren ähnlich. Zeiten, in denen scheinbar nichts vorangeht — keine Klarheit, kein Schwung, kein Fortschritt — sind oft die Phasen der größten inneren Arbeit. Sie fühlen sich unproduktiv an, weil die Bewegung unsichtbar ist. Aber sie findet statt.",
+      closing: "Steckst du gerade in einem inneren Winter — und kannst du ihm zugestehen, dass er seinen Sinn hat?"
+    },
+    {
+      title: "Die letzte Woche des Jahres.",
+      body: "Ein Jahr geht zu Ende. Zwölf Monate, zweiundfünfzig Wochen, jede davon ein Punkt in deinem Raster. Die Versuchung liegt darin, Bilanz zu ziehen — was hast du erreicht, was nicht. Aber die ehrlichere Frage ist: Wer bist du geworden? Nicht was du getan hast, sondern wie du dich verändert hast. Die Antwort darauf findest du nicht in Listen, sondern im stillen Rückblick auf die Momente, in denen du über dich selbst hinausgewachsen bist.",
+      closing: "Wer warst du vor einem Jahr — und wer bist du jetzt?"
+    }
+  ];
+
+  function getWeekNumber() {
+    var now = new Date();
+    var start = new Date(now.getFullYear(), 0, 1);
+    var diff = now - start;
+    var oneWeek = 604800000;
+    return Math.ceil((diff / oneWeek) + start.getDay() / 7);
+  }
+
+  function render() {
+    var week = getWeekNumber();
+    var index = (week - 1) % impulse.length;
+    var current = impulse[index];
+
+    document.getElementById('week-label').textContent = 'Impuls · Kalenderwoche ' + week;
+    document.getElementById('impulse-title').textContent = current.title;
+
+    var bodyHtml = '';
+    var paragraphs = current.body.split('\n\n');
+    for (var i = 0; i < paragraphs.length; i++) {
+      bodyHtml += '<p class="impulse-text">' + paragraphs[i] + '</p>';
+    }
+    bodyHtml += '<p class="impulse-closing">' + current.closing + '</p>';
+    document.getElementById('impulse-body').innerHTML = bodyHtml;
+
+    document.getElementById('week-progress').textContent = 'Woche ' + week + ' von 52';
+
+    var dotsHtml = '';
+    for (var d = 0; d < 52; d++) {
+      var cls = 'week-dot';
+      if (d < week - 1) cls += ' past';
+      if (d === week - 1) cls += ' current';
+      dotsHtml += '<div class="' + cls + '"></div>';
+    }
+    document.getElementById('week-dots').innerHTML = dotsHtml;
+  }
+
+  render();
+</script>
+
+</body>
+</html>
